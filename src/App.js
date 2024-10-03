@@ -1,90 +1,28 @@
 import { useState } from "react";
-import { gql, useQuery, useMutation } from "@apollo/client";
 
 // Queries
-const GET_TODOS = gql`
-  query GetTasks {
-    getTasks {
-      _id
-      title
-    }
-  }
-`;
 
 // Mutations
-const CREATE_TODO = gql`
-  mutation CreateTask(
-    $title: String!
-    $description: String!
-    $status: String!
-  ) {
-    createTask(title: $title, description: $description, status: $status) {
-      _id
-      title
-      description
-      status
-    }
-  }
-`;
-
-const UPDATE_TODO = gql`
-  mutation UpdateTask(
-    $id: ID!
-    $title: String
-    $description: String
-    $status: String
-  ) {
-    updateTask(
-      id: $id
-      title: $title
-      description: $description
-      status: $status
-    ) {
-      _id
-      title
-      description
-      status
-    }
-  }
-`;
-
-const DELETE_TODO = gql`
-  mutation DeleteTask($id: ID!) {
-    deleteTask(id: $id) {
-      _id
-    }
-  }
-`;
-
 
 function App() {
-  const { data, loading, refetch } = useQuery(GET_TODOS);
-  const [createTask] = useMutation(CREATE_TODO);
-  const [updateTask] = useMutation(UPDATE_TODO);
-  const [deleteTask] = useMutation(DELETE_TODO);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Pending");
   const [currentTaskId, setCurrentTaskId] = useState(null);
 
-  if (loading) return <h1>Loading...</h1>;
-
   // Create or Update Task
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (currentTaskId) {
-      await updateTask({
-        variables: { id: currentTaskId, title, description, status },
-      });
+      // graphql call to update
     } else {
-      await createTask({ variables: { title, description, status } });
+      // grphql call to create
     }
     setTitle("");
     setDescription("");
     setStatus("Pending");
     setCurrentTaskId(null);
-    refetch(); // Refresh the data
+    // refresh the data after edit or update
   };
 
   // Edit Task
@@ -97,8 +35,7 @@ function App() {
 
   // Delete Task
   const handleDelete = async (id) => {
-    await deleteTask({ variables: { id } });
-    refetch(); // Refresh the data
+    // grpahql deelte
   };
 
   return (
@@ -109,16 +46,19 @@ function App() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Task Title"
-        />
+        />{" "}
+        <br></br>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Task Description"
         ></textarea>
+        <br></br>
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="Pending">Pending</option>
           <option value="Completed">Completed</option>
         </select>
+        <br></br>
         <button type="submit">
           {currentTaskId ? "Update Task" : "Create Task"}
         </button>
@@ -134,7 +74,15 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {data.getTasks.map((task) => (
+          {[
+            {
+              _id: 1,
+              title: "Learn Grpahql",
+              description:
+                "Leanr graphql with react & express with apolloserver",
+              status: "Pending",
+            },
+          ].map((task) => (
             <tr key={task.id}>
               <td>{task.title}</td>
               <td>{task.description}</td>
