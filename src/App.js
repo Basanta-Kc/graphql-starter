@@ -6,6 +6,15 @@ import { useState } from "react";
 // Mutations
 // eg https://www.apollographql.com/docs/react/data/mutations
 
+const tasks = [
+  {
+    _id: 1,
+    title: "Learn Grpahql",
+    description: "Leanr graphql with react & express with apolloserver",
+    status: "Pending",
+  },
+];
+
 function App() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -76,15 +85,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {[
-            {
-              _id: 1,
-              title: "Learn Grpahql",
-              description:
-                "Leanr graphql with react & express with apolloserver",
-              status: "Pending",
-            },
-          ].map((task) => (
+          {tasks.map((task) => (
             <tr key={task.id}>
               <td>{task.title}</td>
               <td>{task.description}</td>
