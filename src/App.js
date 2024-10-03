@@ -1,8 +1,10 @@
 import { useState } from "react";
 
 // Queries
+// eg https://www.apollographql.com/docs/react/data/queries/
 
 // Mutations
+// eg https://www.apollographql.com/docs/react/data/mutations
 
 function App() {
   const [title, setTitle] = useState("");
